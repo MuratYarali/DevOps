@@ -440,7 +440,7 @@ s3_bucket_name = "oliver-auto-tfvar-bucket"
 terraform plan
 ```
 
-- Terraform loads variables in the following order, with later sources taking precedence over earlier ones:
+- Terraform loads variables in the following order:
 
   1- Any -var and -var-file options on the command line, in the order they are provided.
   2- Any *.auto.tfvars or *.auto.tfvars.json files, processed in lexical order (alphabetical order) of their filenames.
