@@ -50,6 +50,7 @@ resource "aws_instance" "tf-ec2" {
   }
 }
 ```
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/virtualization_types.html
 
 ```bash
 terraform plan
