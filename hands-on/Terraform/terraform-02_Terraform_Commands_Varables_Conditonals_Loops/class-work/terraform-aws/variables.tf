@@ -11,5 +11,13 @@ variable "ec2_ami" {
 }
 
 variable "s3_bucket_name" {
-#  default = "murat-s3-bucket-variable-addwhateveryouwant"
+#  default = "murat-s3-bucket-variable"
+}
+
+variable "num_of_buckets" {
+  default = 2
+}
+
+variable "users" {
+  default = ["santino", "michael", "fredo", "michael"]
 }

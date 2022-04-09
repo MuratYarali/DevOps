@@ -25,8 +25,23 @@ resource "aws_instance" "tf-ec2" {
 }
 
 resource "aws_s3_bucket" "tf-s3" {
-  bucket = var.s3_bucket_name
-  tags= {
-    Name = "${local.mytag}-come from locals"
-  }
+  # bucket = "var.s3_bucket_name.${count.index}"
+  # count = var.num_of_buckets
+  # count = var.num_of_buckets != 0 ? var.num_of_buckets : 1
+  for_each = toset(var.users)
+  bucket   = "murat-tf-s3-bucket-${each.value}"
+}
+
+# if var.num_of_buckets !=0
+#   count = var.num_of_buckets
+# else
+#   count = 3
+
+resource "aws_iam_user" "new_users" {
+  for_each = toset(var.users)
+  name = each.value
+}
+
+output "uppercase_users" {
+  value = [for user in var.users : upper(user) if length(user) > 6]
 }

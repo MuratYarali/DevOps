@@ -1,1 +1,1 @@
-s3_bucket_name = "oliver-auto-tfvar-bucket"
+s3_bucket_name = "murat-auto-tfvar-bucket"
