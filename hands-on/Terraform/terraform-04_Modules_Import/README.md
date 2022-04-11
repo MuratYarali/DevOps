@@ -270,7 +270,7 @@ resource "aws_security_group" "tf-sg" {
 }
 ```
 
-- Open the terminal within this directory and nitialize the Terraform.
+- Open the terminal within this directory and initialize the Terraform.
 
 ```bash
 $ terraform init
