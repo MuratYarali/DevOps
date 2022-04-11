@@ -25,7 +25,7 @@ resource "aws_instance" "tf-instances" {
   ami = element(var.tf-ami, count.index )
   instance_type = "t2.micro"
   count = 3
-  key_name = "firstkey"
+  key_name = "mk"
   security_groups = ["tf-import-sg"]
   tags = {
     Name = element(var.tf-tags, count.index )
