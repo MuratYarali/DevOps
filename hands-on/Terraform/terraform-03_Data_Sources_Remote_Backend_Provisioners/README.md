@@ -1,4 +1,4 @@
-# Hands-on Terraform-03 : Terraform Data Sources, Remote Backend and Provisioners.
+ Hands-on Terraform-03 : Terraform Data Sources, Remote Backend and Provisioners.
 
 Purpose of the this hands-on training is to give students the knowledge of terraform data sources, remote backend and provisioners in Terraform.
 
