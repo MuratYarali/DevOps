@@ -76,27 +76,27 @@ resource "aws_instance" "tf-ec2" {
 
 resource "aws_security_group" "tf-sg" {
   name        = "tf-intance-sg"
-  description = "Allow SSH and HTTP inbound traffic"
+  description = "terraform import security group"
   tags = {
     Name = "tf-sg"
   }
 
   ingress {
     from_port   = 80
+    protocol    = "tcp"
     to_port     = 80
-    protocol    = "http"
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
     from_port   = 22
+    protocol    = "tcp"
     to_port     = 22
-    protocol    = "ssh"
     cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
     from_port   = 0
+    protocol    = -1
     to_port     = 0
-    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
