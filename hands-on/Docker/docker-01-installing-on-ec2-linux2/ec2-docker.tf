@@ -8,7 +8,6 @@ terraform {
   }
 }
 
-
 provider "aws" {
   region = "us-east-1"
 }
@@ -48,7 +47,7 @@ resource "aws_security_group" "allow_ssh" {
 resource "aws_instance" "tf-ec2" {
   ami                    = "ami-087c17d1fe0178315"
   instance_type          = var.instance-type
-  key_name               = "mk"
+  key_name               = "firstkey"
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
   #  iam_instance_profile = "terraform"
   tags = {
