@@ -30,4 +30,4 @@ terraform.rc
 
 .terraform.lock.hcl
 
-ec2-docker_new
+ec2-docker_new.tf
