@@ -80,8 +80,6 @@ resource "aws_instance" "tf-docker-ec2" {
   depends_on = [github_repository.myrepo, github_repository_file.app-files]
 }
 
-
-
 resource "aws_security_group" "tf-docker-sec-gr-203" {
   name = "docker-sec-group-203"
   tags = {
