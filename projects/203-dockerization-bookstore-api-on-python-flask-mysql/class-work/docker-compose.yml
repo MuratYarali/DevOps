@@ -1,3 +1,5 @@
+version: "3.7"
+
 services:
   database:
     image: mysql:5.7
@@ -11,7 +13,7 @@ services:
       - clarusnet
 
   myapp:
-    image: olivercw/bookstoreapi:latest
+    image: muratyarali/bookstoreapi:latest
     container_name: myapp
     restart: always
     depends_on:
