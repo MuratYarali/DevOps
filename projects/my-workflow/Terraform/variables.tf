@@ -1,3 +1,3 @@
 variable "key_name" {
-  default= "firstkey"
+  default = "firstkey"
 }
