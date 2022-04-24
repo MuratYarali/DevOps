@@ -19,7 +19,12 @@ def get_hit_count():
             time.sleep(0.5)
 
 
+# @app.route('/')
+# def hello():
+#     count = get_hit_count()
+#     return 'Hello World! I have been seen {} times.\n'.format(count)
+
 @app.route('/')
 def hello():
     count = get_hit_count()
-    return 'Hello World! I have been seen {} times.\n'.format(count)
+    return 'Hello World! This is modified app. I have been seen {} times.\n'.format(count)
