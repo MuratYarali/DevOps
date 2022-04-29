@@ -579,7 +579,7 @@ $ kubectl get  configmap/demo-config -o json
 We have modifed our application to read parameters from the file. So the `deployment` file changed as follows:
 
 ```yaml
-$ cat deployment.yaml 
+$ cat > deployment.yaml 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
