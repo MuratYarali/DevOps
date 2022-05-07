@@ -100,7 +100,7 @@ $ aws eks list-clusters
 
     - Give general descriptions about the page and the steps of creating the cluster.
 
-    - Fill the ```Name``` and ```Kubernetes version``` fields. (Ex: MyCluster, 1.17)
+    - Fill the ```Name``` and ```Kubernetes version``` fields. (Ex: MyCluster, 1.21)
 
         <i>Mention the durations for minor version support and the approximate release frequency.</i>
 
@@ -128,7 +128,7 @@ $ aws eks list-clusters
 
         <i>Explain the necessity of using dedicated VPC for the cluster.</i>
 
-    - Select default VPC security or create one with SSH connection and tcp 443. 
+    - Select default VPC security or create one with SSH connection. 
 
         <i>Explain the necessity of using dedicated Securitygroup for the cluster.</i>
 
