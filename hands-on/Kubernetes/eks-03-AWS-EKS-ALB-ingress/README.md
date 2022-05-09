@@ -438,5 +438,5 @@ ingress-clarusshop   <none>   clarusshop.clarusway.us   k8s-default-ingressc-38a
 $ eksctl get cluster
 NAME            REGION
 mycluster       us-east-2
-$ eksctl delete cluster mycluster
+$ eksctl delete cluster murat-cluster --region us-east-1
 ```
