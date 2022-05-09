@@ -45,7 +45,7 @@ sudo yum update -y
 - Install git.
 
 ```bash
-sudo yum install git
+sudo yum install git -y
 ```
 
 - Install helm.
