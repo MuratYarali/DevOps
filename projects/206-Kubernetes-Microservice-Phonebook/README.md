@@ -84,7 +84,7 @@ Phonebook Microservice Web Application aims to create a web application with MyS
     - Volume capacity should be set as `20Gi`.
     - Access Mode should be set as `ReadWriteOnce`.
     - Host path should be set as `/mnt/data`.
-    - To be able to attache this volume, a persistent volume claim should be defined.
+    - To be able to attach this volume, a persistent volume claim should be defined.
   
   4.1. Kubernetes Environment
   - Assign two EC2 machines as the project's infrastructure. One should be configured as the master and the other should be configured as the worker. 
