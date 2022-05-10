@@ -170,7 +170,8 @@ aws iam create-policy \
 
 ```bash
 eksctl create iamserviceaccount \
-  --cluster=my-cluster \
+  --cluster=mycluster \
+  --region=us-east-1 \
   --namespace=kube-system \
   --name=aws-load-balancer-controller \
   --role-name "AmazonEKSLoadBalancerControllerRole" \
@@ -196,7 +197,8 @@ eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=mycluster 
 
 ```bash
 eksctl create iamserviceaccount \
-  --cluster=my-cluster \
+  --cluster=mycluster \
+  --region=us-east-1 \
   --namespace=kube-system \
   --name=aws-load-balancer-controller \
   --role-name "AmazonEKSLoadBalancerControllerRole" \
