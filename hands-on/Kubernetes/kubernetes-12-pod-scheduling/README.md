@@ -86,7 +86,7 @@ spec:
 kubectl apply -f clarus-deploy.yaml
 ```
 
-- List the pods and notice that all pods are assigned to the worker node.
+- List the pods and notice that all pods are assigned to the master node.
 
 ```bash
 kubectl get po -o wide
@@ -102,6 +102,7 @@ kubectl delete -f clarus-deploy.yaml
 
 ```bash
 kubectl taint nodes kube-master node-role.kubernetes.io/master:NoSchedule-
+kubectl taint nodes kube-master node-role.kubernetes.io/control-plane:NoSchedule-
 ```
 
 - Create the clarus-deploy again.
