@@ -337,6 +337,10 @@ helm install --debug --dry-run morevalues murat-chart
 ```
 
 - Helm has over 60 available functions. Some of them are defined by the [Go template language](https://pkg.go.dev/text/template) itself. Most of the others are part of the [Sprig template](https://masterminds.github.io/sprig/) library. We have already seen the quote. Let's see some other functions.
+=======
+- So far, we've seen how to place information into a template. But that information is placed into the template unmodified. Sometimes we want to transform the supplied data in a way that makes it more useful to us.
+
+- Helm has over 60 available functions. Some of them are defined by the [Go template language](https://pkg.go.dev/text/template) itself. Most of the others are part of the [Sprig template](https://masterminds.github.io/sprig/) library. Let's see some functions.
 
 - Update the `murat-chart/templates/configmap.yaml` as below.
 
@@ -349,6 +353,7 @@ data:
   myvalue: "murat-chart configmap example"
   course: {{ .Values.course }}
   topic: {{ .Values.lesson.topic }}
+  myvalue: "clarus-chart configmap example"
   time: {{ now | date "2006.01.02" | quote }} 
 ```
 
@@ -564,6 +569,8 @@ helm plugin install https://github.com/chartmuseum/helm-push.git
 
 ```bash
 helm cm-push murat-chart mylocalrepo
+cd
+helm cm-push clarus-chart mylocalrepo
 ```
 
 - Update and search the mylocalrepo.
