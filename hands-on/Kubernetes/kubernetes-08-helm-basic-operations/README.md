@@ -200,7 +200,7 @@ helm uninstall helm-demo
 - Let's create our own values and use it within the template. Update the `murat-chart/values.yaml` as below.
 
 ```yaml
-course: DevOps
+course: DevOps        # Delete everything and paste
 ```
 
 - Edit the murat-chart/templates/configmap.yaml as below.
