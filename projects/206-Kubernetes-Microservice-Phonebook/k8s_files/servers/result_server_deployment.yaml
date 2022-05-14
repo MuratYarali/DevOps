@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: result-server-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: phonebook-result-server
+  template:
+    metadata:
+      labels:
+        app: phonebook-result-server
+    spec:
+      containers:
+        - name:  phonebook-result-server
+          image: leylakose/phonebook_result_server:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-user-password
+          envFrom:
+            - configMapRef:
+                name: servers-configmap
