@@ -13,13 +13,13 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: webserver
+            name: webserver-svc
             port:
               number: 80
       - path: /result
         pathType: Prefix
         backend:
           service:
-            name: resultserver
+            name: resultserver-svc
             port:
               number: 80

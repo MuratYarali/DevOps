@@ -7,16 +7,13 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "4.9.0"
     }
   }
 }
 
 provider "aws" {
   region = "us-east-1"
-  profile = "cw-training"
-  # secret_key = ""
-  # access_key = ""
 }
 
 variable "tags" {
@@ -24,10 +21,10 @@ variable "tags" {
 }
 
 resource "aws_instance" "amazon-linux-2" {
-  ami = "ami-0a8b4cd432b1c3063"
-  instance_type = "t2.micro"
-  count = 3
-  key_name = "walter-pem" ####### CHANGE HERE #######
+  ami             = "ami-0a8b4cd432b1c3063"
+  instance_type   = "t2.micro"
+  count           = 3
+  key_name        = "mk" ####### CHANGE HERE #######
   security_groups = ["ansible-session-sec-gr"]
   tags = {
     Name = element(var.tags, count.index)
@@ -36,14 +33,14 @@ resource "aws_instance" "amazon-linux-2" {
 
 
 resource "aws_instance" "ubuntu" {
-  ami = "ami-04505e74c0741db8d"
-  instance_type = "t2.micro"
-  key_name = "walter-pem"
+  ami             = "ami-04505e74c0741db8d"
+  instance_type   = "t2.micro"
+  key_name        = "mk"
   security_groups = ["ansible-session-sec-gr"]
 
-tags = {
-  Name = "node_3"
-}
+  tags = {
+    Name = "node_3"
+  }
 }
 
 resource "aws_security_group" "tf-sec-gr" {
@@ -74,19 +71,19 @@ resource "aws_security_group" "tf-sec-gr" {
   }
 }
 
-resource "null_resource" "config" {
-  depends_on = [aws_instance.amazon-linux-2[0]]
-  connection {
-    host = aws_instance.amazon-linux-2[0].public_ip
-    type = "ssh"
-    user = "ec2-user"
-    private_key = file("~/.ssh/walter-pem.pem") ####### CHANGE HERE #######
-    }
+# resource "null_resource" "config" {
+#   depends_on = [aws_instance.amazon-linux-2[0]]
+#   connection {
+#     host        = aws_instance.amazon-linux-2[0].public_ip
+#     type        = "ssh"
+#     user        = "ec2-user"
+#     private_key = file("F:/CLA-AWS/0.AWS-Cloud/7-KEY.PEMS/firstkey.pem") ####### CHANGE HERE #######
+#   }
 
-  provisioner "remote-exec" {
-    inline = [
-    "sudo apt install rsync grsync -y",
-    ]
-  }
+#   rovisioner "remote-exec" {
+#     inline = [
+#       "sudo apt install rsync grsync -y"
+#     ]
+#   }
 
-}
+# }
