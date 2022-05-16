@@ -25,7 +25,7 @@ resource "aws_instance" "amazon-linux-2" {
   instance_type   = "t2.micro"
   count           = 3
   key_name        = "mk" ####### CHANGE HERE #######
-  security_groups = ["ansible-session-sec-gr"]
+  security_groups = ["ansible-sec-grp"]
   tags = {
     Name = element(var.tags, count.index)
   }
@@ -36,7 +36,7 @@ resource "aws_instance" "ubuntu" {
   ami             = "ami-04505e74c0741db8d"
   instance_type   = "t2.micro"
   key_name        = "mk"
-  security_groups = ["ansible-session-sec-gr"]
+  security_groups = ["ansible-sec-grp"]
 
   tags = {
     Name = "node_3"
@@ -44,9 +44,9 @@ resource "aws_instance" "ubuntu" {
 }
 
 resource "aws_security_group" "tf-sec-gr" {
-  name = "ansible-session-sec-gr"
+  name = "ansible-sec-grp"
   tags = {
-    Name = "ansible-session-sec-gr"
+    Name = "ansible-sec-grp"
   }
 
   ingress {
@@ -80,9 +80,9 @@ resource "aws_security_group" "tf-sec-gr" {
 #     private_key = file("F:/CLA-AWS/0.AWS-Cloud/7-KEY.PEMS/firstkey.pem") ####### CHANGE HERE #######
 #   }
 
-#   rovisioner "remote-exec" {
+#   provisioner "remote-exec" {
 #     inline = [
-#       "sudo apt install rsync grsync -y"
+#       "sudo yum install rsync grsync -y"
 #     ]
 #   }
 
