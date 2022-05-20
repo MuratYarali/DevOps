@@ -5,8 +5,7 @@ variable "mykey" {}
 variable "mykeypem" {}
 variable "tags" {}
 variable "myami" {
-  description = "3 Red Hat Enterprise Linux 8 ami"
+  description = "3 amazon linux 2 ami"
 }
 variable "instancetype" {}
 variable "num" {}
-variable "mysecgr" {}

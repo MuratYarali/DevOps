@@ -1,2 +1,3 @@
 ansible-infrastructure
-terraform-files
+.terraform
+.terraform.lock
