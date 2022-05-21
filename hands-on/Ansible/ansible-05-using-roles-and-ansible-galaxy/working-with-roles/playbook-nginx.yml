@@ -1,0 +1,6 @@
+---
+- name: use galaxy nginx role
+  hosts: all
+  become: true
+  roles:
+    - geerlingguy.nginx

@@ -372,7 +372,7 @@ ansible-galaxy install -r role_requirements.yml
 ansible-galaxy init /home/ec2-user/ansible/roles/common
 ```
 
-* Then create a playbook file to create instance image.
+* Then create a playbook file name playbook.yml to create instance image.
 
 ```yml
 ---
@@ -415,6 +415,8 @@ ansible-galaxy init /home/ec2-user/ansible/roles/common
   with_items:
     - ntp
 ```
+
+ansible-playbook playbook.yml
 
 * Also add a slack notification that shows ansible deployment is finished. 
 
