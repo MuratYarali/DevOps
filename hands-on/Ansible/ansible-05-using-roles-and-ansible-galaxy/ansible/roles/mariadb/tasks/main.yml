@@ -1,0 +1,73 @@
+- name: install mariadb
+  become: yes
+  yum:
+    name: 
+        - mariadb-server
+        - python3-PyMySQL
+    state: latest
+
+- name: copy the sql script
+  copy:
+    src: db-load-script.sql
+    dest: ~/
+  
+- name: start mariadb
+  become: yes
+  command: systemctl start mariadb
+
+- name: enable mariadb
+  become: yes
+  systemd: 
+    name: mariadb
+    enabled: true
+
+- name: Create password for the root user
+  mysql_user:
+    login_password: ''
+    login_user: root
+    name: root
+    password: "clarus1234"
+
+- name: copy the .my.cnf file
+  copy:
+    src: .my.cnf
+    dest: ~/
+      
+- name: Create database user with name 'remoteUser' and password 'clarus1234' with all database privileges
+  mysql_user:
+    name: remoteUser
+    password: "clarus1234"
+    login_user: "root"
+    login_password: "clarus1234"
+    priv: '*.*:ALL,GRANT'
+    state: present
+    host: "{{ web }}"
+
+- name: Create database schema
+  mysql_db:
+    name: ecomdb
+    login_user: root
+    login_password: "clarus1234"
+    state: present
+
+- name: check if the database has the table
+  shell: |
+    echo "USE ecomdb; show tables like 'products'; " | mysql
+  register: resultOfShowTables
+
+- name: DEBUG
+  debug:
+    var: resultOfShowTables
+
+- name: Import database schema
+  mysql_db:
+    name: ecomdb
+    state: import
+    target: ~/db-load-script.sql
+  when: resultOfShowTables.stdout == ""
+
+- name: restart mariadb
+  become: yes
+  service: 
+    name: mariadb
+    state: restarted

@@ -2,7 +2,7 @@
 - name: Send slack notification
   slack:
     token: "{{slack_token}}"
-    msg: ' {{ inventory_hostname }} Deployed by Murat'
+    msg: ' {{ inventory_hostname }} Deployed with Ansible by Murat'
     # msg: '[{{project_code}}] [{{env_name}}] {{app_name}} {{ inventory_hostname }} {{aws_tags.Name}} '
     channel: "{{slack_channel}}"
     username: "{{slack_username}}"
@@ -11,6 +11,6 @@
   become: no
   when: inventory_hostname == ansible_play_hosts_all[-1]
   vars:
-    slack_token: "XXXX"
-    slack_channel: "#class-chat_tr"
-    slack_username: "D1322-Murat"
+    slack_token: "T036PJP1THA/B03GEPJ2XAR/P1LobWNFYGukbrYh9s7HfBuc"
+    slack_channel: "#class-chat-geveze"
+    slack_username: "Ansible"

@@ -1,15 +1,45 @@
-- name: installing apache
-  yum:
-    name: httpd
+---
+# tasks file for /home/ec2-user/ansible/roles/apache
+- name: install the latest version of Apache
+  package:
+    name: 
+      - git
+      - httpd
+      - php
+      - php-mysqlnd
     state: latest
 
-- name: index.html
-  copy:
-    content: "<h1>Hello Clarusway</h1>"
-    dest: /var/www/html/index.html
+- name: start the server and enable it
+  service:
+    name: httpd
+    state: started
+    enabled: yes
 
-- name: restart apache2
+- name: clone the repo of the website
+  shell: |
+    if [ -z "$(ls -al /var/www/html | grep .git)" ]; then
+      git clone https://github.com/kodekloudhub/learning-app-ecommerce.git /var/www/html/
+      echo "ok"
+    else
+      echo "already cloned..."
+    fi
+  register: result
+  
+- name: DEBUG
+  debug:
+    var: result
+
+- name: Replace a default entry with our own
+  lineinfile:
+    path: /var/www/html/index.php
+    regexp: '172\.20\.1\.101'
+    line: "$link = mysqli_connect('{{ db }}', 'remoteUser', 'clarus1234', 'ecomdb');"
+  when: not result.stdout == "already cloned..."
+
+- selinux:
+    state: disabled
+
+- name: Restart service httpd
   service:
     name: httpd
     state: restarted
-    enabled: yes

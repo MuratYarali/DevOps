@@ -459,3 +459,176 @@ ansible-playbook playbook.yml
 ```
 
 * Then run the playbook command again.
+
+
+## Part  - DYNAMIC WEBSERVER
+
+ansible-galaxy init /home/ec2-user/ansible/roles/mariadb
+
+* create mariadb/tasks/main.yml and paste
+
+```yml
+- name: install mariadb
+  become: yes
+  yum:
+    name: 
+        - mariadb-server
+        - python3-PyMySQL
+    state: latest
+
+- name: copy the sql script
+  copy:
+    src: db-load-script.sql
+    dest: ~/
+  
+- name: start mariadb
+  become: yes
+  command: systemctl start mariadb
+
+- name: enable mariadb
+  become: yes
+  systemd: 
+    name: mariadb
+    enabled: true
+
+- name: Create password for the root user
+  mysql_user:
+    login_password: ''
+    login_user: root
+    name: root
+    password: "clarus1234"
+
+- name: copy the .my.cnf file
+  copy:
+    src: .my.cnf
+    dest: ~/
+      
+- name: Create database user with name 'remoteUser' and password 'clarus1234' with all database privileges
+  mysql_user:
+    name: remoteUser
+    password: "clarus1234"
+    login_user: "root"
+    login_password: "clarus1234"
+    priv: '*.*:ALL,GRANT'
+    state: present
+    host: "{{ web }}"
+
+- name: Create database schema
+  mysql_db:
+    name: ecomdb
+    login_user: root
+    login_password: "clarus1234"
+    state: present
+
+- name: check if the database has the table
+  shell: |
+    echo "USE ecomdb; show tables like 'products'; " | mysql
+  register: resultOfShowTables
+
+- name: DEBUG
+  debug:
+    var: resultOfShowTables
+
+- name: Import database schema
+  mysql_db:
+    name: ecomdb
+    state: import
+    target: ~/db-load-script.sql
+  when: resultOfShowTables.stdout == ""
+
+- name: restart mariadb
+  become: yes
+  service: 
+    name: mariadb
+    state: restarted
+```
+
+* create db-load-script.sql in mariadb/files and paste
+```
+USE ecomdb;
+CREATE TABLE products (id mediumint(8) unsigned NOT NULL auto_increment,Name varchar(255) default NULL,Price varchar(255) default NULL, ImageUrl varchar(255) default NULL,PRIMARY KEY (id)) AUTO_INCREMENT=1;
+
+INSERT INTO products (Name,Price,ImageUrl) VALUES ("Laptop","100","c-1.png"),("Drone","200","c-2.png"),("VR","300","c-3.png"),("Tablet","50","c-5.png"),("Watch","90","c-6.png"),("Phone Covers","20","c-7.png"),("Phone","80","c-8.png"),("Laptop","150","c-4.png");
+```
+
+* create .my.cnf file in mariadb/files and paste
+```
+[client]
+user=root
+password=clarus1234
+
+[mysqld]
+wait_timeout=30000
+interactive_timeout=30000
+bind-address=0.0.0.0
+```
+
+paste mariadb/vars/main.yml
+web: "{{ hostvars['web_server'].ansible_host }}"
+
+* paste /home/ec2-user/ansible/roles/apache/tasks/main.yml
+```yml
+---
+# tasks file for /home/ec2-user/ansible/roles/apache
+- name: install the latest version of Apache
+  package:
+    name: 
+      - git
+      - httpd
+      - php
+      - php-mysqlnd
+    state: latest
+
+- name: start the server and enable it
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: clone the repo of the website
+  shell: |
+    if [ -z "$(ls -al /var/www/html | grep .git)" ]; then
+      git clone https://github.com/kodekloudhub/learning-app-ecommerce.git /var/www/html/
+      echo "ok"
+    else
+      echo "already cloned..."
+    fi
+  register: result
+  
+- name: DEBUG
+  debug:
+    var: result
+
+- name: Replace a default entry with our own
+  lineinfile:
+    path: /var/www/html/index.php
+    regexp: '172\.20\.1\.101'
+    line: "$link = mysqli_connect('{{ db }}', 'remoteUser', 'clarus1234', 'ecomdb');"
+  when: not result.stdout == "already cloned..."
+
+- selinux:
+    state: disabled
+
+- name: Restart service httpd
+  service:
+    name: httpd
+    state: restarted
+```
+
+* paste /home/ec2-user/ansible/roles/apache/vars/main.yml
+db: "{{ hostvars['db_server'].ansible_host }}"
+
+
+* create playrole.yml in /home/ec2-user/working-with-roles
+```yml
+- name: run the db
+  hosts: db_server
+  roles:
+    - mariadb
+
+- name: run the web
+  hosts: web_server
+  become: yes
+  roles:
+    - apache
+```

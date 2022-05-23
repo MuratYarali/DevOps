@@ -1,0 +1,11 @@
+---
+- name: run the db
+  hosts: db_server
+  roles:
+    - mariadb
+
+- name: run the web
+  hosts: web_server
+  become: yes
+  roles:
+    - apache
