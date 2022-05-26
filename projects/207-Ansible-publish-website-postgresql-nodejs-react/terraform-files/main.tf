@@ -3,7 +3,7 @@
 terraform {
   required_providers {
     aws = {
-      source = "hashicorp/aws"
+      source  = "hashicorp/aws"
       version = "~> 4.0"
     }
   }
@@ -20,25 +20,25 @@ variable "tags" {
 }
 
 resource "aws_instance" "control_node" {
-  ami = "ami-0f095f89ae15be883"
-  instance_type = "t2.medium"
-  key_name = "oliver"
-  iam_instance_profile = aws_iam_instance_profile.ec2full.name
+  ami                    = "ami-0f095f89ae15be883"
+  instance_type          = "t2.medium"
+  key_name               = "firstkey"
+  iam_instance_profile   = aws_iam_instance_profile.ec2full.name
   vpc_security_group_ids = [aws_security_group.tf-sec-gr.id]
   tags = {
-    Name = "ansible_control"
+    Name  = "ansible_control"
     stack = "ansible_project"
   }
 }
 resource "aws_instance" "managed_nodes" {
-  ami = "ami-0f095f89ae15be883"
-  count = 3
-  instance_type = "t2.micro"
-  key_name = "oliver"
+  ami                    = "ami-0f095f89ae15be883"
+  count                  = 3
+  instance_type          = "t2.micro"
+  key_name               = "firstkey"
   vpc_security_group_ids = [aws_security_group.tf-sec-gr.id]
   tags = {
-    Name = "ansible_${element(var.tags, count.index )}"
-    stack = "ansible_project"
+    Name        = "ansible_${element(var.tags, count.index)}"
+    stack       = "ansible_project"
     environment = "development"
   }
 }
@@ -68,9 +68,9 @@ resource "aws_iam_instance_profile" "ec2full" {
 }
 
 resource "aws_security_group" "tf-sec-gr" {
-  name = "project207-sec-gr-oliver"
+  name = "project207-sec-gr-firstkey"
   tags = {
-    Name = "project207-sec-gr-oliver"
+    Name = "project207-sec-gr-firstkey"
   }
 
   ingress {
@@ -109,25 +109,25 @@ resource "aws_security_group" "tf-sec-gr" {
 resource "null_resource" "config" {
   depends_on = [aws_instance.control_node]
   connection {
-    host = aws_instance.control_node.public_ip
-    type = "ssh"
-    user = "ec2-user"
-    private_key = file("~/.ssh/oliver.pem")
+    host        = aws_instance.control_node.public_ip
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file("~/.ssh/firstkey.pem")
   }
 
   provisioner "file" {
-    source = "./ansible.cfg"
-    destination = "/home/ec2-user/ansible.cfg"
+    source      = "./ansible.cfg"
+    destination = "/home/ec2-user/.ansible.cfg"
   }
 
   provisioner "file" {
-    source = "./inventory_aws_ec2.yml"
+    source      = "./inventory_aws_ec2.yml"
     destination = "/home/ec2-user/inventory_aws_ec2.yml"
   }
 
   provisioner "file" {
-    source = "~/.ssh/oliver.pem"
-    destination = "/home/ec2-user/oliver.pem"
+    source      = "~/.ssh/firstkey.pem"
+    destination = "/home/ec2-user/firstkey.pem"
   }
 
   provisioner "remote-exec" {
@@ -136,7 +136,7 @@ resource "null_resource" "config" {
       "sudo yum install -y python3",
       "pip3 install --user ansible",
       "pip3 install --user boto3",
-      "chmod 400 oliver.pem"
+      "chmod 400 firstkey.pem"
     ]
   }
 

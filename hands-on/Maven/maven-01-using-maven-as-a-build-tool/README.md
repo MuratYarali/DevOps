@@ -144,7 +144,7 @@ java -jar maven-experiment-1.0-SNAPSHOT.jar
 - Explain the error in the standard output. 
     - Maven's jar file is not an executable jar file. The jar file does not have both the ```Main Class``` and the necessary packages to run the application. 
 
-- Add the plugin below to the pom file and run ```mvn clean package``` command again.
+- Add the plugin below to the pom file and run ```mvn clean package``` command again. Enter this part after dependencies 41. line, before </project>.
 
 ```xml
 <build>
@@ -253,11 +253,3 @@ sudo systemctl enable httpd
 ```bash
 sudo cp -a site/. /var/www/html
 ```
-
-
-
-
-
-
-
-

@@ -3,19 +3,19 @@
 //custom security group allowing SSH connections from anywhere on port 22.
 
 provider "aws" {
-  region = "us-east-1"
-  profile = "matt"
+  region  = "us-east-1"
+  //  profile = "murat"
   //  access_key = ""
   //  secret_key = ""
   //  If you have entered your credentials in AWS CLI before, you do not need to use these arguments.
 }
 
 resource "aws_instance" "maven-ec2" {
-  ami             = "ami-0947d2ba12ee1ff75"
-  instance_type   = "t2.micro"
-  
+  ami           = "ami-0947d2ba12ee1ff75"
+  instance_type = "t2.micro"
+
   //  Write your own pem file name
-  key_name        = "davidskey"
+  key_name        = "firstkey"
   security_groups = ["maven-sec-grp"]
 
   tags = {
