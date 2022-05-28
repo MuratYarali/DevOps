@@ -1,0 +1,14 @@
+mkdir roles && cd roles
+ansible-galaxy init docker
+ansible-galaxy init postgre
+ansible-galaxy init nodejs
+ansible-galaxy init react
+
+sudo pip3 install --upgrade requests
+
+.ansible.cfg'e ekle
+roles_path = /home/ec2-user/ansible/roles
+
+
+new_playrole.yml
+ansible-galaxy install geerlingguy.docker
