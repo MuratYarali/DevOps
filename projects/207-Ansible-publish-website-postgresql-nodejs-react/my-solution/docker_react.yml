@@ -61,8 +61,8 @@
         owner: root
         group: root
         mode: '0755'
-    # at this point do not forget change DB_HOST env variable for postgresql node
-    - name: copy files to the nodejs node
+    # at this point do not forget change DB_HOST env variable for nodejs node
+    - name: copy files to the react node
       copy:
         src: /home/ec2-user/ansible-project/todo-app-pern/client/
         dest: /home/ec2-user/react
