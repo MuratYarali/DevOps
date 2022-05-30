@@ -19,6 +19,7 @@ provider "aws" {
 }
 
 resource "aws_instance" "control_node" {
+<<<<<<< HEAD
   ami                    = var.myami
   instance_type          = var.controlinstancetype
   key_name               = var.mykey

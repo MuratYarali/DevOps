@@ -1,16 +1,19 @@
-- name: configure nodejs instance
+- name: Install docker
+  gather_facts: No
+  any_errors_fatal: true
   hosts: _ansible_nodejs
   become: true
-  tasks: 
-    - name: update packages
+  tasks:
+    - name: upgrade all packages
       yum: 
-        name: "*"
+        name: '*'
         state: latest
-    - name: Uninstall old versions
+    # we may need to uninstall any existing docker files from the centos repo first.
+    - name: Remove docker if installed from CentOS repo
       yum:
         name: "{{ item }}"
         state: removed
-      loop:
+      with_items:
         - docker
         - docker-client
         - docker-client-latest
@@ -19,12 +22,13 @@
         - docker-latest-logrotate
         - docker-logrotate
         - docker-engine
-
-    - name: install yum-utils
+    - name: Install yum utils
       yum:
-        name: yum-utils
+        name: "{{ item }}"
         state: latest
-      
+      with_items:
+        - yum-utils
+
     - name: Add Docker repo
       get_url:
         url: https://download.docker.com/linux/centos/docker-ce.repo
@@ -36,25 +40,26 @@
         state: latest
 
     - name: Install pip
-      package: 
+      package:
         name: python3-pip
         state: present
-        
+        update_cache: true
+
     - name: Install docker sdk
       pip:
         name: docker
 
-    - name: add ec2-user to docker group
+    - name: Add user ec2-user to docker group
       user:
         name: ec2-user
         groups: docker
         append: yes
 
-    - name: start docker service
-      systemd:
+    - name: Start Docker service
+      service:
         name: docker
-        enabled: yes
         state: started
+        enabled: yes
 
     - name: create build directory
       file:
@@ -62,38 +67,38 @@
         state: directory
         owner: root
         group: root
-        mode: "0755"
-
-    - name: copy files to nodejs node
-      copy: 
-        src: /home/ec2-user/ansible/ansible_Project/nodejs/server/
+        mode: '0755'
+    # at this point do not forget change DB_HOST env variable for postgresql node
+    - name: copy files to the nodejs node
+      copy:
+        src: /home/ec2-user/ansible-project/todo-app-pern/server/
         dest: /home/ec2-user/nodejs
 
-    - name: copy the dockerfile
-      copy: 
-        src: /home/ec2-user/ansible/ansible_Project/nodejs/Dockerfile
+    - name: copy the Dockerfile
+      copy:
+        src: /home/ec2-user/ansible-project/nodejs/Dockerfile
         dest: /home/ec2-user/nodejs
 
-    - name: remove container and image if exist
-      shell: "docker ps -q --filter 'name=murat_nodejs' && docker stop murat_nodejs && docker rm -fv murat_nodejs && docker image rm -f muratcw/nodejs || echo 'Not Found'"
+    - name: remove cla_nodejs container if exists
+      shell: "docker ps -q --filter 'name=cla_nodejs' && docker stop cla_nodejs && docker rm -fv cla_nodejs && docker image rm clacw/nodejs || echo 'Not Found'"
 
     - name: build container image
       docker_image:
-        name: muratcw/nodejs
+        name: clacw/nodejs
         build:
           path: /home/ec2-user/nodejs
         source: build
         state: present
 
-    - name: create postgresql docker container
+    - name: Launch nodejs docker container
       docker_container:
-        name: murat_nodejs
-        image: muratcw/nodejs
+        name: cla_nodejs
+        image: clacw/nodejs
         state: started
         ports:
-          - "5000:5000"
+        - "5000:5000"
       register: container_info
 
-    - name: print the container info
+    - name: Print the container_info
       debug:
-        var: container_info
+        msg: "{{ container_info }}"
