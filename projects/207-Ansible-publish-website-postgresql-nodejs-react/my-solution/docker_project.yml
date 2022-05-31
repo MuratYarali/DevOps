@@ -58,12 +58,12 @@
         enabled: yes
 
 - name: postgre database config
-  hosts: _ansible_postgresql_oliver
+  hosts: _ansible_postgresql
   become: true
   vars: 
     postgre_container: /home/ec2-user/postgresql
-    container_name: oliver_postgre
-    image_name: olivercw/postgre
+    container_name: muratyarali_postgre
+    image_name: muratyarali/postgre_nf
   tasks:
     - name: create build directory
       file:
@@ -107,12 +107,12 @@
           - /db-data:/var/lib/postgresql/data
 
 - name: Nodejs Server configuration
-  hosts: _ansible_nodejs_oliver
+  hosts: _ansible_nodejs
   become: true
   vars: 
     container_path: /home/ec2-user/nodejs
-    container_name: oliver_nodejs
-    image_name: olivercw/nodejs
+    container_name: muratyarali_nodejs
+    image_name: muratyarali/nodejs_nf
   tasks:
     - name: create build directory
       file:
@@ -152,12 +152,12 @@
         - "5000:5000"
 
 - name: React UI Server configuration
-  hosts: _ansible_react_oliver
+  hosts: _ansible_react
   become: true
   vars: 
     container_path: /home/ec2-user/react
-    container_name: oliver_react
-    image_name: olivercw/react
+    container_name: muratyarali_react
+    image_name: muratyarali/react_nf
   tasks:
     - name: create build directory
       file:

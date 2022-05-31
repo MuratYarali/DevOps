@@ -82,12 +82,12 @@
         src: /home/ec2-user/ansible-project/postgres/Dockerfile
         dest: /home/ec2-user/postgresql
 
-    - name: remove cla_postgre container and clacw/postgre if exists
-      shell: "docker ps -q --filter 'name=cla_postgre' && docker stop cla_postgre && docker rm -fv cla_postgre && docker image rm -f clacw/postgre || echo 'Not Found'"
+    - name: remove muratyarali_postgre container and muratyarali/postgre_nf if exists
+      shell: "docker ps -q --filter 'name=muratyarali_postgre' && docker stop muratyarali_postgre && docker rm -fv muratyarali_postgre && docker image rm -f muratyarali/postgre_nf || echo 'Not Found'"
 
     - name: build container image
       docker_image:
-        name: clacw/postgre
+        name: muratyarali/postgre_nf
         build:
           path: /home/ec2-user/postgresql
         source: build
@@ -95,8 +95,8 @@
 
     - name: Launch postgresql docker container
       docker_container:
-        name: cla_postgre
-        image: clacw/postgre
+        name: muratyarali_postgre
+        image: muratyarali/postgre_nf
         state: started
         ports: 
         - "5432:5432"

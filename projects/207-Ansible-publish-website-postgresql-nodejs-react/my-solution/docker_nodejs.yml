@@ -79,12 +79,12 @@
         src: /home/ec2-user/ansible-project/nodejs/Dockerfile
         dest: /home/ec2-user/nodejs
 
-    - name: remove cla_nodejs container if exists
-      shell: "docker ps -q --filter 'name=cla_nodejs' && docker stop cla_nodejs && docker rm -fv cla_nodejs && docker image rm clacw/nodejs || echo 'Not Found'"
+    - name: remove muratyarali_nodejs container if exists
+      shell: "docker ps -q --filter 'name=muratyarali_nodejs' && docker stop muratyarali_nodejs && docker rm -fv muratyarali_nodejs && docker image rm muratyarali/nodejs_nf || echo 'Not Found'"
 
     - name: build container image
       docker_image:
-        name: clacw/nodejs
+        name: muratyarali/nodejs_nf
         build:
           path: /home/ec2-user/nodejs
         source: build
@@ -92,8 +92,8 @@
 
     - name: Launch nodejs docker container
       docker_container:
-        name: cla_nodejs
-        image: clacw/nodejs
+        name: muratyarali_nodejs
+        image: muratyarali/nodejs_nf
         state: started
         ports:
         - "5000:5000"

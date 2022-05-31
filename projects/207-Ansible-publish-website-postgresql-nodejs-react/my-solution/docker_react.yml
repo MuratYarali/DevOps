@@ -70,19 +70,19 @@
       copy:
         src: /home/ec2-user/ansible-project/react/Dockerfile
         dest: /home/ec2-user/react
-    - name: remove cla_react container and clacw/react image if exists
-      shell: "docker ps -q --filter 'name=cla_react' && docker stop cla_react && docker rm -fv cla_react && docker image rm -f clacw/react || echo 'Not Found'"
+    - name: remove muratyarali_react container and muratyarali/react_nf image if exists
+      shell: "docker ps -q --filter 'name=muratyarali_react' && docker stop muratyarali_react && docker rm -fv muratyarali_react && docker image rm -f muratyarali/react_nf || echo 'Not Found'"
     - name: build container image
       docker_image:
-        name: clacw/react
+        name: muratyarali/react_nf
         build:
           path: /home/ec2-user/react
         source: build
         state: present
     - name: Launch react docker container
       docker_container:
-        name: cla_react
-        image: clacw/react
+        name: muratyarali_react
+        image: muratyarali/react_nf
         state: started
         ports:
         - "3000:3000"
