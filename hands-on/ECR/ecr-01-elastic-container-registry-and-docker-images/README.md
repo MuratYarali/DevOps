@@ -308,3 +308,9 @@ aws ecr delete-repository \
 ```
 
 - Delete the image and repository of `student1-repo/todo-app` from AWS ECR Console.
+
+```bash
+aws ecr delete-repository \
+      --repository-name student1-repo/todo-app \
+      --force
+```
