@@ -49,6 +49,8 @@ ssh -i .ssh/call-training.pem ec2-user@ec2-3-133-106-98.us-east-2.compute.amazon
 
 ```bash
 sudo yum update -y
+
+sudo yum install git -y
 ```
 
 - Install `Java 11 openjdk` Java Development Kit.
