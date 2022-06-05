@@ -65,6 +65,12 @@ sudo amazon-linux-extras install java-openjdk11 -y
 java -version
 ```
 
+- Install Git
+
+```bash
+sudo yum install git -y
+```
+
 - Add Jenkins repo to the `yum` repository.
 
 ```bash
