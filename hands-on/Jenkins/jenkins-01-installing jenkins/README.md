@@ -283,7 +283,7 @@ git push
 - Enter URL of the project repository, and let others be default.
 
 ```text
-https://github.com/<your_github_account_name>/jenkinsfile-pipeline-project/
+https://github.com/MuratYarali/jenkinsfile-pipeline-project.git
 ```
 
 - Click `apply` and `save`. Note that the script `Jenkinsfile` should be placed under root folder of repo.
