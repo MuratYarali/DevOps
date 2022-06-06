@@ -80,7 +80,6 @@ sudo yum install git -y
 - To the bottom, `Maven` section
   - Give a name such as `maven-3.8.5`
   - Select `install automatically`
-  - `Install from Apache` version `3.8.5`
 - Save
 
 ## Part 3 - Creating Package Application - Free Style Maven Job
