@@ -244,11 +244,13 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'mvn -f hello-app/pom.xml -B -DskipTests clean package'
+                sh 'mvn -f hello-app/pom.xml -B -DskipTests clean package'   /* -f,--file <arg> Force the use of an alternate POM file (or directory with pom.xml)
+                                                                                -B,--batch-mode Run in non-interactive (batch) mode (disables output color) */
             }
             post {
                 success {
-                    echo "Now Archiving the Artifacts....."
+                    echo "Now Archiving the Artifacts....."                 /* /home/* is saying every file directly in the /home directory.
+                                                                               /home/** is saying every file in any directory inside /home. */
                     archiveArtifacts artifacts: '**/*.jar'
                 }
             }

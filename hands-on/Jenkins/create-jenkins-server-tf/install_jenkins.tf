@@ -17,11 +17,11 @@ provider "aws" {
 }
 
 resource "aws_instance" "tf-jenkins-server" {
-  ami           = var.myami
-  instance_type = var.instancetype
-  key_name      = var.mykey
+  ami                    = var.myami
+  instance_type          = var.instancetype
+  key_name               = var.mykey
   vpc_security_group_ids = [aws_security_group.tf-jenkins-sec-gr.id]
-  user_data = file("install-jenkins.sh")
+  user_data              = file("install-jenkins.sh")
   tags = {
     Name = var.tags
   }
