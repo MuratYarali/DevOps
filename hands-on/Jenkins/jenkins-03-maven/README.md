@@ -244,9 +244,9 @@ pipeline {
             }
             post {
                 success {
-                    echo "Now Archiving the Artifacts....."                 /* /home/* is saying every file directly in the /home directory.
-                                                                               /home/** is saying every file in any directory inside /home. */
-                    archiveArtifacts artifacts: '**/*.jar'
+                    echo "Now Archiving the Artifacts....."
+                    archiveArtifacts artifacts: '**/*.jar'   /* /home/* is saying every file directly in the /home directory.
+                                                                               /home/** is saying every file in a ny directory inside /home. */
                 }
             }
         }

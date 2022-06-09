@@ -14,7 +14,7 @@ variable "myami" {
   default     = "ami-0022f774911c1d690"
 }
 variable "instancetype" {
-  default = "t2.micro"
+  default = "t3a.medium"
 }
 
 variable "secgrname" {
