@@ -14,11 +14,8 @@ terraform {
 
 provider "aws" {
   region = "us-east-1"
-<<<<<<< HEAD
-=======
   # secret_key = ""
   # access_key = ""
->>>>>>> edc47025f4fb62e30a2d916ac607bdb1fa486e4d
 }
 
 variable "tags" {
