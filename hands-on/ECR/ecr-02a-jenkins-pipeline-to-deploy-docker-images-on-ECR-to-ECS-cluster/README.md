@@ -44,8 +44,6 @@ At the end of the this hands-on training, students will be able to;
 
 - Launch a pre-configured `Jenkins Server` from the terraform file running on Amazon Linux 2, allowing SSH (port 22) and HTTP (ports 80, 8080) connections.  
 
-- Clarusway Jenkins Server is configured with admin user `admin` and password `Clarusway1234`.
-
 - Open your Jenkins dashboard and navigate to `Manage Jenkins` >> `Manage Plugins` >> `Available` tab
 
 - Search and select `GitHub Integration, Pipeline: GitHub, Docker, Docker Pipeline` plugins, then click to `Install without restart`. Note: No need to install the other `Git plugin` which is already installed can be seen under `Installed` tab.
@@ -141,7 +139,6 @@ pipeline {
             steps{
                 withEnv(["HOME=${env.WORKSPACE}"]) {
                     sh 'yarn install --production'
-                    sh 'npm install'
                 }   
             }
         }
@@ -188,19 +185,6 @@ pipeline {
         APP_REPO_NAME= "clarusway/to-do-app"
     }
     stages {
-        stage("Run app on Docker"){
-            agent{
-                docker{
-                    image 'node:12-alpine'
-                }
-            }
-            steps{
-                withEnv(["HOME=${env.WORKSPACE}"]) {
-                    sh 'yarn install --production'
-                    sh 'npm install'
-                }   
-            }
-        }
         stage('Build Docker Image') {
             steps {
                 sh 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:latest" .'
@@ -232,17 +216,13 @@ git add .
 git commit -m 'added Jenkinsfile'
 git push
 ```
-- Explain, why did we get `Error: Cannot perform an interactive login from a non TTY deviceAdd` error and add the following line into ```environment``` section in the Jenkins file.
+- Explain, why we got `Error: Cannot perform an interactive login from a non TTY deviceAdd` error and add the following line into ```environment``` section in the Jenkins file.
 
 ```text
 PATH="/usr/local/bin/:${env.PATH}"
 ```
 
-### Step-3: Jenkins Build Process
-
-- Go to the Jenkins project page and click `Build Now`.The job has to be executed manually one time in order for the push trigger and the git repo to be registered.
-
-### Step-4: Make change to trigger Jenkins
+### Step-3: Make change to trigger Jenkins
 
 - Now, to trigger an automated build on Jenkins Server, we need to change code in the repo. For example, in the `src/static/js/app.js` file, update line 56 of `<p className="text-center">No items yet! Add one above!</p>` with following new text.
 
@@ -276,7 +256,7 @@ docker container stop todo
 docker container rm todo
 ```
 
-### Step 5 Add Deploy stage 
+### Step 4 Add Deploy stage 
 
 - Go to the Jenkins instance (todo-app-node-project/ directory)to create `Jenkinsfile`
 ```bash
@@ -300,19 +280,6 @@ Press "i" to edit
         PATH="/usr/local/bin/:${env.PATH}"
     }
     stages {
-        stage("Run app on Docker"){
-            agent{
-                docker{
-                    image 'node:12-alpine'
-                }
-            }
-            steps{
-                withEnv(["HOME=${env.WORKSPACE}"]) {
-                    sh 'yarn install --production'
-                    sh 'npm install'
-                }   
-            }
-        }
         stage('Build Docker Image') {
             steps {
                 sh 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:latest" .'
@@ -329,7 +296,8 @@ Press "i" to edit
             steps {
                 sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin "$ECR_REGISTRY"'
                 sh 'docker pull "$ECR_REGISTRY/$APP_REPO_NAME:latest"'
-                sh 'docker run -dp 80:3000 "$ECR_REGISTRY/$APP_REPO_NAME:latest"'
+                sh 'docker ps -q --filter "name=todo" | grep -q . && docker stop todo && docker rm -fv todo'
+                sh 'docker run --name todo -dp 80:3000 "$ECR_REGISTRY/$APP_REPO_NAME:latest"'
             }
         }
 
@@ -353,7 +321,7 @@ git commit -m 'added Jenkinsfile'
 git push
 ```
 
-### Step 6 Deploy to the ECS cluster
+### Step 5 Deploy to the ECS cluster
 
 - Createa ECS cluster with a unique name with the following command.
 
@@ -381,7 +349,7 @@ aws ecs create-cluster --cluster-name to-do-app
 	],
 	"cpu": "256",
 	"memory": "512",
-        "executionRoleArn": "<arn:aws:iam::DON'T FORGET TO CHANGE ME>:role/ecsTaskExecutionRole"
+        "executionRoleArn": "arn:aws:iam::<aws-account-id>:role/ecsTaskExecutionRole"
 }
 ```
 
@@ -411,23 +379,10 @@ aws ecs create-service --cluster to-do-app --service-name to-do-app-service --ta
 pipeline {
     agent any
     environment {
-        ECR_REGISTRY = "046402772087.dkr.ecr.us-east-1.amazonaws.com"
+        ECR_REGISTRY = "<aws-account-id>.dkr.ecr.us-east-1.amazonaws.com"
         APP_REPO_NAME= "clarusway/to-do-app"
     }
     stages {
-        stage("Run app on Docker"){
-            agent{
-                docker{
-                    image 'node:12-alpine'
-                }
-            }
-            steps{
-                withEnv(["HOME=${env.WORKSPACE}"]) {
-                    sh 'yarn install --production'
-                    sh 'npm install'
-                }   
-            }
-        }
         stage('Build Docker Image') {
             steps {
                 sh 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:latest" .'
@@ -467,7 +422,7 @@ git push
 
 - Check the <ecs task Public IP:3000> page.
 
-### Step 7 Make change to trigger again 
+### Step 6 Make change to trigger again 
 
 - Change the script to make trigger.
 
