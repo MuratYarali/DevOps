@@ -4,3 +4,4 @@ ansible-infrastructure
 .terraform.lock.hcl
 terraform.tfstate
 terraform.tfstate.backup
+ecr-ecs-ec2-jenkins.tf
