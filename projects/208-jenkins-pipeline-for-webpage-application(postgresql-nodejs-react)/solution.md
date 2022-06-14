@@ -192,17 +192,185 @@ output "react_ip" {
 
 output "node_public_ip" {
   value = aws_instance.managed_nodes[1].public_ip
-
 }
 
 output "postgre_private_ip" {
   value = aws_instance.managed_nodes[0].private_ip
-
 }
 ```
 ### main.tf
 
 ```yml
+
+- Create a terraform config file name `main.tf` and create 3 Red Hat instances second way.
+
+```yml
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = "us-east-1"
+
+}
+
+resource "aws_instance" "postgres_node" {
+  ami = "ami-0f095f89ae15be883"
+  instance_type = var.instancetype
+  key_name = var.mykey
+  iam_instance_profile = "jenkins-project-profile"
+  vpc_security_group_ids = [aws_security_group.postgres-sec-gr.id]
+  tags = {
+    Name = "ansible_postgres"
+    stack = "ansible_project"
+    environment = "development"
+  }
+}
+
+resource "aws_instance" "react_node" {
+  ami = "ami-0f095f89ae15be883"
+  instance_type = var.instancetype
+  key_name = var.mykey
+  iam_instance_profile = "jenkins-project-profile"
+  vpc_security_group_ids = [aws_security_group.react-sec-gr.id]
+  tags = {
+    Name = "ansible_react"
+    stack = "ansible_project"
+    environment = "development"
+  }
+}
+
+resource "aws_instance" "nodejs_node" {
+  ami = "ami-0f095f89ae15be883"
+  instance_type = var.instancetype
+  key_name = var.mykey
+  iam_instance_profile = "jenkins-project-profile2"
+  vpc_security_group_ids = [aws_security_group.nodejs-sec-gr.id]
+  tags = {
+    Name = "ansible_nodejs"
+    stack = "ansible_project"
+    environment = "development"
+  }
+}
+
+resource "aws_iam_role" "aws_access2" {
+  name = "awsrole"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
+  managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"]
+
+}
+
+resource "aws_iam_instance_profile" "ec2-profile" {
+  name = "jenkins-project-profile2"
+  role = aws_iam_role.aws_access.name
+}
+
+resource "aws_security_group" "postgres-sec-gr" {
+  name = "project208-postgres-sec-gr"
+  tags = {
+    Name = "project208-postgres-sec-gr"
+  }
+
+  ingress {
+    from_port   = 22
+    protocol    = "tcp"
+    to_port     = 22
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+
+  ingress {
+    from_port   = 5432
+    protocol    = "tcp"
+    to_port     = 5432
+    security_groups = [aws_security_group.nodejs-sec-gr.id]
+  }
+
+  egress {
+    from_port   = 0
+    protocol    = -1
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "react-sec-gr" {
+  name = "project208-react-sec-gr"
+  tags = {
+    Name = "project208-react-sec-gr"
+  }
+
+  ingress {
+    from_port   = 22
+    protocol    = "tcp"
+    to_port     = 22
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 3000
+    protocol    = "tcp"
+    to_port     = 3000
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    protocol    = -1
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "nodejs-sec-gr" {
+  name = "project208-nodejs-sec-gr"
+  tags = {
+    Name = "project208-nodejs-sec-gr"
+  }
+
+  ingress {
+    from_port   = 22
+    protocol    = "tcp"
+    to_port     = 22
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port   = 5000
+    protocol    = "tcp"
+    to_port     = 5000
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    protocol    = -1
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+```
+### main.tf
+
+```yml
+
 - we give the same role (jenkins project profile). normally we only need `AmazonEC2ContainerRegistryFullAccess`, but we created a role for jenkins server, so we used it here, too.
 
 - we attach some tags to managed nodes for using dynamic inventory.
