@@ -236,7 +236,7 @@ sudo systemctl start grafana-server.service
 
 ### Creating a Prometheus graph
 
-- Click the graph title, then click "Edit".
+- Click the "explore" title, then click "Edit".
 
 - Under the "Metrics" tab, select your Prometheus data source (bottom right).
 
