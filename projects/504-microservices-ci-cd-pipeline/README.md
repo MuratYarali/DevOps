@@ -690,7 +690,7 @@ git push --set-upstream origin feature/msp-9
 ``` bash
 git add .
 git commit -m 'updated POM with Jacoco plugin'
-git push
+git push -u origin feature/msp-9
 git checkout dev
 git merge feature/msp-9
 git push origin dev
