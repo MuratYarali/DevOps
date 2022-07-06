@@ -4035,8 +4035,6 @@ git branch feature/msp-28
 git checkout feature/msp-28
 ```
 
-* Create a Kubernetes cluster using Rancher with RKE and new nodes in AWS (on one EC2 instance only) and name it as `petclinic-cluster`.
-
 ```yml
 Cluster Type      : Amazon EC2
 Name Prefix       : petclinic-k8s-instance
@@ -4045,8 +4043,6 @@ etcd              : checked
 Control Plane     : checked
 Worker            : checked
 ```
-
-* Create `petclinic-prod-ns` namespace on `petclinic-cluster` with Rancher.
 
 * Create a Jenkins Job and name it as `create-ecr-docker-registry-for-petclinic-prod` to create Docker Registry for `Production` manually on AWS ECR.
 
@@ -4128,10 +4124,21 @@ docker push "${IMAGE_TAG_PROMETHEUS_SERVICE}"
   - Public access: Yes
   - Initial database name: petclinic
 ```
+* Replace /.kube/config file in Jenkins Server with petclinic-cluster config file. After that change permissions
 
-- Delete `mysql-server-deployment.yaml` file from `k8s/petclinic_chart/templates` folder.
+```linux
+chmod 400 config
+```
 
-- Update `k8s/petclinic_chart/templates/mysql-server-service.yaml` as below.
+* Create `petclinic-prod-ns` namespace on `petclinic-cluster` with "Rancher". Later check it where was it created.
+
+```linux
+kubectl create ns petclinic-prod-ns
+```
+
+* Delete `mysql-server-deployment.yaml` file from `k8s/petclinic_chart/templates` folder.
+
+* Update `k8s/petclinic_chart/templates/mysql-server-service.yaml` as below.
 
 ```yaml
 apiVersion: v1
@@ -4231,7 +4238,7 @@ pipeline {
                 sh "chmod 400 k8s/config"
                 sh "helm repo add stable-petclinic s3://petclinic-helm-charts/stable/myapp/"
                 sh "helm package k8s/petclinic_chart"
-                sh "helm s3 push petclinic_chart-${BUILD_NUMBER}.tgz stable-petclinic"
+                sh "helm s3 push --force petclinic_chart-${BUILD_NUMBER}.tgz stable-petclinic"
                 sh "helm repo update"
                 sh "AWS_REGION=$AWS_REGION helm upgrade --install petclinic-app-release stable-petclinic/petclinic_chart --version ${BUILD_NUMBER} --namespace petclinic-prod-ns --kubeconfig k8s/config"
             }
