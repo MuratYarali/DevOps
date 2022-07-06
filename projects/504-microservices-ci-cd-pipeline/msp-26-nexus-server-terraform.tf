@@ -19,7 +19,7 @@ provider "aws" {
 resource "aws_instance" "tf-nexus-server" {
   ami           = "ami-0cff7528ff583bf9a"
   instance_type = "t3a.medium"
-  key_name      = "tyler-team"
+  key_name      = "call-rancher.pem"
   vpc_security_group_ids = [aws_security_group.tf-nexus-sec-gr.id]
   tags = {
     Name = "nexus-server"
