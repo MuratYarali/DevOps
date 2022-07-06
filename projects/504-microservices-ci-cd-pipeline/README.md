@@ -4130,7 +4130,7 @@ docker push "${IMAGE_TAG_PROMETHEUS_SERVICE}"
 chmod 400 config
 ```
 
-* Create `petclinic-prod-ns` namespace on `petclinic-cluster` with "Rancher". Later check it where was it created.
+* Create `petclinic-prod-ns` namespace on `petclinic-cluster` with "Rancher". Later check it where was it created. If it is necessary, move namespace to under default project field.
 
 ```linux
 kubectl create ns petclinic-prod-ns
@@ -4283,6 +4283,8 @@ git checkout feature/msp-29
 ```
 
 * Create an `A` record of `petclinic.clarusway.us` in your hosted zone (in our case `clarusway.us`) using AWS Route 53 domain registrar and bind it to your `petclinic cluster`.
+
+* Check the website
 
 * Configure TLS(SSL) certificate for `petclinic.clarusway.us` using `cert-manager` on petclinic K8s cluster with the following steps.
 
