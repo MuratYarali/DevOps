@@ -4127,7 +4127,7 @@ docker push "${IMAGE_TAG_PROMETHEUS_SERVICE}"
 * Replace /.kube/config file in Jenkins Server with petclinic-cluster config file. After that change permissions
 
 ```linux
-chmod 400 config
+sudo chmod 400 config
 ```
 
 * Create `petclinic-prod-ns` namespace on `petclinic-cluster` with "Rancher". Later check it where was it created. If it is necessary, move namespace to under default project field.
