@@ -73,7 +73,7 @@ Resources:
     Properties:
       LaunchTemplateData:
         ImageId: ami-01cc34ab2709337aa
-        InstanceType: t3.medium
+        InstanceType: t3a.medium
         KeyName: !Ref KeyPairName
         SecurityGroupIds:
           - !GetAtt PetclinicDemoSG.GroupId
